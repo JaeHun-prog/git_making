@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "667435208416",
+    "project_id": "login-dc331",
+    "storage_bucket": "login-dc331.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667435208416:android:c09cd8e5cdcf5425480a85",
+        "android_client_info": {
+          "package_name": "com.example.login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667435208416-ea73e051m0pbhhj7b9m9bksr458p0v9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXqQeBwBewgfxqu_wXu8LvO7KZZhFZwZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667435208416-ea73e051m0pbhhj7b9m9bksr458p0v9e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "667435208416-duvhlccmblghh3lj4uagd65uf5u0tcak.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.login.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
