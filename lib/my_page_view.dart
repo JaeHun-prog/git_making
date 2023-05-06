@@ -29,7 +29,8 @@ class _MyPageViewState extends State<MyPageView> {
         children: <Widget>[
           Container(
             color: Colors.red,
-            child: const Center(
+            child: //const Design(),
+                const Center(
               child: Text(
                 "Page 1",
                 style: TextStyle(fontSize: 24, color: Colors.white),
