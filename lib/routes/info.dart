@@ -30,6 +30,7 @@ class _InfoContentState extends State<InfoContent> {
     _infoData = _fetchInfoData();
   }
 
+  //firestore의 info 컬렉션-users문서-data get
   Future<DocumentSnapshot<Map<String, dynamic>>> _fetchInfoData() async {
     final CollectionReference usersCollection =
         FirebaseFirestore.instance.collection('info');
@@ -88,9 +89,10 @@ class _InfoContentState extends State<InfoContent> {
           children: [
             ExpansionTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('Version Information'),
+              title: const Text('버전 정보'),
               children: [
                 Text(
+                  //버전정보 필드 data get
                   data['versionInfo']?.toString() ?? '',
                   style: const TextStyle(
                     color: Colors.black54,
@@ -102,14 +104,16 @@ class _InfoContentState extends State<InfoContent> {
             ),
             ExpansionTile(
               leading: const Icon(Icons.featured_play_list_outlined),
-              title: const Text('Main features and usage'),
+              title: const Text('사용 방법'),
               children: [
+                //사용방법 필드 data get
                 _buildUsageMethod(data['usageGuide']),
               ],
             ),
             ExpansionTile(
+              //자주묻는질문 필드 data get
               leading: const Icon(Icons.question_mark_outlined),
-              title: const Text('Frequently Asked Questions'),
+              title: const Text('자주 묻는 질문'),
               children: [
                 _buildFAQ(data['frequentlyAskedQuestions']),
               ],
@@ -120,94 +124,3 @@ class _InfoContentState extends State<InfoContent> {
     );
   }
 }
-
-
-
-
-/*
-class _InfoContentState extends State<InfoContent> {
-  late Future<DocumentSnapshot<Map<String, dynamic>>> _infoData;
-
-  @override
-  void initState() {
-    super.initState();
-    _infoData = _fetchInfoData();
-  }
-
-  //firestore의 info 컬렉션-users문서-data get
-  Future<DocumentSnapshot<Map<String, dynamic>>> _fetchInfoData() async {
-    final CollectionReference usersCollection =
-        FirebaseFirestore.instance.collection('info');
-    final DocumentSnapshot<Object?> snapshot =
-        await usersCollection.doc('users').get();
-    return snapshot as DocumentSnapshot<Map<String, dynamic>>;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      future: _infoData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error fetching data'));
-        }
-        final Map<String, dynamic>? data = snapshot.data?.data();
-        if (data == null) {
-          return const Center(child: Text('No data found'));
-        }
-        return Column(
-          children: [
-            ExpansionTile(
-              leading: const Icon(Icons.info_outline),
-              title: const Text('Version Information'),
-              children: [
-                Text(
-                  //버전정보 필드 data get
-                  data['versionInfo'] ?? '',
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            ExpansionTile(
-              leading: const Icon(Icons.featured_play_list_outlined),
-              title: const Text('Main features and usage'),
-              children: [
-                Text(
-                  //사용방법 필드 data get
-                  data['usageGuide'] ?? '',
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            ExpansionTile(
-              leading: const Icon(Icons.question_mark_outlined),
-              title: const Text('Frequently Asked Questions'),
-              children: [
-                Text(
-                  //자주묻는질문 필드 data get
-                  data['frequentlyAskedQuestions'] ?? '',
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
-}*/
