@@ -28,6 +28,7 @@ class _MyPageViewState extends State<MyPageView> {
         },
         children: <Widget>[
           Container(
+            //page 1, 메인 페이지
             color: Colors.red,
             child: //const Design(),
                 const Center(
