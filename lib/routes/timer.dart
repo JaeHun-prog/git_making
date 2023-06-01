@@ -10,9 +10,9 @@ class PowerSavingModePage extends StatefulWidget {
 }
 
 class _PowerSavingModePageState extends State<PowerSavingModePage> {
-  int _selectedHour = 0;
-  int _selectedMinute = 0;
-  int _selectedSecond = 0;
+  final int _selectedHour = 0;
+  final int _selectedMinute = 0;
+  final int _selectedSecond = 0;
   late BluetoothDevice _device;
   bool _isConnected = false;
 
@@ -27,7 +27,7 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
     List<ScanResult> scanResults =
         await flutterBlue.scan(timeout: const Duration(seconds: 4)).toList();
     ScanResult deviceResult = scanResults.firstWhere(
-      (result) => result.device.name == 'esp32-D07EB8',
+      (result) => result.device.name == 'ESP32_plz',
       orElse: () => throw Exception('ESP32 device not found'),
     );
     _device = deviceResult.device;
@@ -44,11 +44,12 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Bluetooth 연결 오류'),
-            content: const Text('Bluetooth 연결이 실패하였습니다. 다시 시도해주세요.'),
+            title: const Text('Bluetooth Connection Error'),
+            content:
+                const Text('Bluetooth connection failed. Please try again.'),
             actions: [
               TextButton(
-                child: const Text('확인'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -66,10 +67,12 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
     BluetoothCharacteristic? characteristic;
 
     for (BluetoothService service in services) {
-      for (BluetoothCharacteristic c in service.characteristics) {
-        if (c.uuid.toString() == 'c5056b11-a797-470c-9259-9c2980763aeb') {
-          characteristic = c;
-          break;
+      if (service.uuid.toString() == 'c5056b11-a797-470c-9259-9c2980763aeb') {
+        for (BluetoothCharacteristic c in service.characteristics) {
+          if (c.uuid.toString() == 'beb5483e-36e1-4688-b7f5-ea07361b26a8') {
+            characteristic = c;
+            break;
+          }
         }
       }
       if (characteristic != null) {
@@ -82,11 +85,11 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('오류'),
-            content: const Text('Bluetooth 특성을 찾을 수 없습니다.'),
+            title: const Text('Error'),
+            content: const Text('Cannot find the Bluetooth characteristic.'),
             actions: [
               TextButton(
-                child: const Text('확인'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -104,11 +107,11 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('저장이 되었습니다!'),
-          content: const Text('절전 모드 설정이 저장되었습니다.'),
+          title: const Text('Settings Saved!'),
+          content: const Text('Power saving mode settings have been saved.'),
           actions: [
             TextButton(
-              child: const Text('확인'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -128,11 +131,7 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
           children: [
             DropdownButton<int>(
               value: _selectedHour,
-              onChanged: (value) {
-                setState(() {
-                  _selectedHour = value!;
-                });
-              },
+              onChanged: null, // Set onChanged to null to disable the dropdown
               items: List.generate(24, (index) {
                 return DropdownMenuItem<int>(
                   value: index,
@@ -142,11 +141,7 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
             ),
             DropdownButton<int>(
               value: _selectedMinute,
-              onChanged: (value) {
-                setState(() {
-                  _selectedMinute = value!;
-                });
-              },
+              onChanged: null, // Set onChanged to null to disable the dropdown
               items: List.generate(60, (index) {
                 return DropdownMenuItem<int>(
                   value: index,
@@ -156,11 +151,7 @@ class _PowerSavingModePageState extends State<PowerSavingModePage> {
             ),
             DropdownButton<int>(
               value: _selectedSecond,
-              onChanged: (value) {
-                setState(() {
-                  _selectedSecond = value!;
-                });
-              },
+              onChanged: null, // Set onChanged to null to disable the dropdown
               items: List.generate(60, (index) {
                 return DropdownMenuItem<int>(
                   value: index,

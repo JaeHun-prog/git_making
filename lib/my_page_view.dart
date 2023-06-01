@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login/routes/info.dart';
 import 'package:login/routes/timer.dart';
+import 'package:login/MainPage.dart';
 
 class MyPageView extends StatefulWidget {
   const MyPageView({super.key});
@@ -17,7 +18,8 @@ class _MyPageViewState extends State<MyPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PageView Example"),
+        title: const Text("My Style",
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 24)),
       ),
       body: PageView(
         controller: _pageController,
@@ -29,14 +31,7 @@ class _MyPageViewState extends State<MyPageView> {
         children: <Widget>[
           Container(
             //page 1, 메인 페이지
-            color: Colors.red,
-            child: //const Design(),
-                const Center(
-              child: Text(
-                "Page 1",
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              ),
-            ),
+            child: const MainPage(),
           ),
           Container(
             //page 2, 절전 페이지
@@ -61,16 +56,16 @@ class _MyPageViewState extends State<MyPageView> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.looks_one),
-            label: "Page 1",
+            icon: Icon(Icons.developer_mode_rounded),
+            label: "모드",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.looks_two),
-            label: "Page 2",
+            icon: Icon(Icons.battery_alert),
+            label: "절전",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.looks_3),
-            label: "Page 3",
+            icon: Icon(Icons.info_outline),
+            label: "정보",
           ),
         ],
       ),
