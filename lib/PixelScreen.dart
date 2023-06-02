@@ -1,4 +1,6 @@
+import 'package:login/MainPage.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PixelScreen extends StatefulWidget {
   const PixelScreen({Key? key}) : super(key: key);
@@ -12,10 +14,12 @@ class PixelScreenState extends State<PixelScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Color> _colorlist = [];
+  List<bool> _pixelData = [];
   List<Color> genrateColorslist() {
     List<Color> colorslist = [];
     for (int i = 0; i < (32 * 8); i++) {
       colorslist.add(const Color.fromARGB(255, 81, 81, 81));
+      _pixelData.add(false);
     }
     return colorslist;
   }
@@ -26,11 +30,36 @@ class PixelScreenState extends State<PixelScreen>
     _colorlist = genrateColorslist();
   }
 
-  void showInSnackBar(String value) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(value),
-      duration: const Duration(seconds: 2),
-    ));
+  Future<void> saveToFirestore() async {
+    try {
+      CollectionReference pixelCollection = FirebaseFirestore.instance
+          .collection('design')
+          .doc('test')
+          .collection('pixel');
+
+      // Clear previous data
+      await pixelCollection.doc('num').set({'num_i': []});
+
+      // Generate pixel data array
+      List<int> pixelDataArray = [];
+      for (bool pixelValue in _pixelData) {
+        int value = pixelValue ? 255 : 0;
+        pixelDataArray.add(value);
+      }
+
+      // Save pixel data to Firestore
+      await pixelCollection.doc('num').set({'num_i': pixelDataArray});
+
+      // Success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data saved to Firestore')),
+      );
+    } catch (e) {
+      // Error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to save data to Firestore')),
+      );
+    }
   }
 
   @override
@@ -40,23 +69,6 @@ class PixelScreenState extends State<PixelScreen>
       backgroundColor: Colors.black,
       body: Column(
         children: <Widget>[
-          /*Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextButton.icon(
-              style: TextButton.styleFrom(padding: const EdgeInsets.all(14)),
-              onPressed: () {
-                //showSettingsPage();
-              },
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.white,
-              ),
-              label: const Text(
-                'Connected Device', // 연결된 장치 이름이나 상태를 보여줄 수 있는 텍스트
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ),
-          ),*/
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -71,18 +83,12 @@ class PixelScreenState extends State<PixelScreen>
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       onTap: () {
-                        if (_colorlist[index] == Colors.red) {
-                          setState(() {
-                            _colorlist[index] =
-                                const Color.fromARGB(255, 79, 79, 79);
-                          });
-                          // sendTextToESP("$index+0");
-                        } else {
-                          setState(() {
-                            _colorlist[index] = Colors.red;
-                          });
-                          // sendTextToESP("$index+1");
-                        }
+                        setState(() {
+                          _pixelData[index] = !_pixelData[index];
+                          _colorlist[index] = _pixelData[index]
+                              ? Colors.red
+                              : const Color.fromARGB(255, 79, 79, 79);
+                        });
                       },
                       child: Container(
                         margin: const EdgeInsets.all(1),
@@ -99,14 +105,33 @@ class PixelScreenState extends State<PixelScreen>
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // sendTextToESP("clear");
-                setState(() {
-                  _colorlist = genrateColorslist();
-                });
-              },
-              child: const Icon(Icons.refresh),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: saveToFirestore,
+                  child: const Icon(Icons.save),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to MainPage.dart when back button is pressed
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainPage()),
+                    );
+                  },
+                  child: const Icon(Icons.arrow_back),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _colorlist = genrateColorslist();
+                      _pixelData = List.filled(8 * 32, false);
+                    });
+                  },
+                  child: const Icon(Icons.refresh),
+                ),
+              ],
             ),
           )
         ],
@@ -114,16 +139,3 @@ class PixelScreenState extends State<PixelScreen>
     );
   }
 }
-/*
-  void sendText(String value, HomeState state) async {
-    state.sendTextToESP(value);
-    showInSnackBar('Sending $value');
-  }
-  void showSettingsPage() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => ChangeNotifierProvider(
-            create: (_) => SettingState(), child: const SettingsPage()),
-        fullscreenDialog: true));
-  }
-*/
-//}
