@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login/PixelScreen.dart';
 import 'package:login/design_set/rgb_picker.dart';
 
 enum AnimationType {
@@ -218,7 +219,7 @@ class ModeSelect extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const TestPage(),
+                    builder: (context) => const PixelScreen(),
                   ),
                 );
               },
@@ -236,22 +237,6 @@ class ModeSelect extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class TestPage extends StatelessWidget {
-  const TestPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Test Page'),
-      ),
-      body: const Center(
-        child: Text('8*32 pixel'),
       ),
     );
   }
